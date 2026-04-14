@@ -15,7 +15,8 @@ lightgbm==4.5.0
 # ==============================================================================
 # DEEP LEARNING
 # ==============================================================================
-torch==2.4.1
+#torch==2.4.1                     #Not compatible with python 3.13. Use this command for installation
+                                  #pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 torchvision==0.19.1
 torchaudio==2.4.1
 # tensorflow==2.17.0              # Optional: uncomment if TensorFlow is needed
