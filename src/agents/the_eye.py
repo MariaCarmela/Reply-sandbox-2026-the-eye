@@ -61,7 +61,8 @@ LANGFUSE_HOST: str = os.getenv("LANGFUSE_HOST", "https://cloud.langfuse.com")
 # Path constants  (all relative to project root)
 # ---------------------------------------------------------------------------
 ROOT_DIR: Path = Path(__file__).resolve().parents[2]
-DATA_DIR: Path = ROOT_DIR / "data"/"raw"
+DATA_DIR_TEST: Path = ROOT_DIR / "data"/"raw"
+DATA_DIR: Path = ROOT_DIR / "data"/"eval"
 MODELS_DIR: Path = ROOT_DIR / "models"
 OUTPUT_DIR: Path = ROOT_DIR / "output"
 
@@ -164,12 +165,15 @@ except ImportError:
 # ULID-based session ID generator (no external dependency)
 # ---------------------------------------------------------------------------
 def _generate_ulid() -> str:
-    """Generate a ULID-like unique session identifier."""
-    import time
+ 
+ """Generate a session ID in format: {team_name}-{ulid}"""
 
-    timestamp_ms = int(time.time() * 1000)
-    random_part = os.urandom(10).hex().upper()
-    return f"{timestamp_ms:013X}{random_part}"[:26]
+ import time
+ team = os.getenv("TEAM_NAME", "unknown_team").replace(" ", "-")
+ timestamp_ms = int(time.time() * 1000)
+ random_part = os.urandom(10).hex().upper()
+ ulid_part = f"{timestamp_ms:013X}{random_part}"[:26]
+ return f"{team}-{ulid_part}
 
 
 # ===========================================================================

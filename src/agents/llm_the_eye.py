@@ -19,6 +19,7 @@
 # ===========================================================================
 # 4.  LLMAgent
 # ===========================================================================
+from __future__ import annotations
 class LLMAgent:
     """
     Classifies citizens using an LLM via the OpenRouter API.
@@ -253,7 +254,7 @@ Architecture:
     - TheEye          : Orchestrator with optional Langfuse telemetry
 """
 
-from __future__ import annotations
+
 
 import json
 import logging
@@ -360,12 +361,15 @@ except ImportError:
 # ULID-based session ID generator (no external dependency)
 # ---------------------------------------------------------------------------
 def _generate_ulid() -> str:
-    """Generate a ULID-like unique session identifier."""
-    import time
+ 
+ """Generate a session ID in format: {team_name}-{ulid}"""
 
-    timestamp_ms = int(time.time() * 1000)
-    random_part = os.urandom(10).hex().upper()
-    return f"{timestamp_ms:013X}{random_part}"[:26]
+ import time
+ team = os.getenv("TEAM_NAME", "unknown_team").replace(" ", "-")
+ timestamp_ms = int(time.time() * 1000)
+ random_part = os.urandom(10).hex().upper()
+ ulid_part = f"{timestamp_ms:013X}{random_part}"[:26]
+ return f"{team}-{ulid_part}"
 
 
 # ===========================================================================
